@@ -29,6 +29,7 @@ namespace netcoreWebAPI
             services.AddDbContext<AppDbContext>(option =>
             option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
+            services.AddScoped(typeof(IGenericRepo<>), typeof(SqlGenericRepo<>));
             services.AddControllers();
         }
 

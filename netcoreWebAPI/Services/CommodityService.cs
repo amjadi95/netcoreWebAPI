@@ -52,7 +52,8 @@ namespace netcoreWebAPI.Services
                 {
                     response.Message = "item deleted successfully";
                 }
-                response.Message = "item delete failed";
+                else
+                    response.Message = "item delete failed";
             }
             else
             {

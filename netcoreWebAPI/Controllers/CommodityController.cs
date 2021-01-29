@@ -22,30 +22,31 @@ namespace netcoreWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Add( [FromBody]Commodity newCommodity)
         {
-            await _commodityService.Add(newCommodity);
-            return Ok(await _commodityService.GetAll());
+            var response =  await _commodityService.Add(newCommodity);
+            return Ok(response);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _commodityService.GetAll());
+            var response = await _commodityService.GetAll();
+            return Ok(response);
         }
 
         
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _commodityService.GetById(id);
+            var response = await _commodityService.GetById(id);
 
-            return Ok(item);
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _commodityService.Delete(id);
+            var response = await _commodityService.Delete(id);
 
-            return Ok(item);
+            return Ok(response);
         }
     }
 }

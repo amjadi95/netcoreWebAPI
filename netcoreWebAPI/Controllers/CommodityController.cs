@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using netcoreWebAPI.Data;
 using netcoreWebAPI.Models;
+using netcoreWebAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +13,29 @@ namespace netcoreWebAPI.Controllers
     [ApiController]
     public class CommodityController : Controller
     {
-        private readonly IGenericRepo<Commodity> _commodityRepo;
-        public CommodityController(IGenericRepo<Commodity> commodityRepo )
+        private readonly ICommodityService _commodityService;
+        public CommodityController(ICommodityService commodityService)
         {
-            _commodityRepo = commodityRepo;
+            _commodityService = commodityService;
         }        
 
         [HttpPost]
         public async Task<IActionResult> Add( [FromBody]Commodity newCommodity)
         {
-            await _commodityRepo.Add(newCommodity);
-            await _commodityRepo.SaveChanges();
-            return Ok(await _commodityRepo.GetAll());
+            await _commodityService.Add(newCommodity);
+            return Ok(await _commodityService.GetAll());
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _commodityRepo.GetAll());
+            return Ok(await _commodityService.GetAll());
         }
 
         
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _commodityRepo.GetById(id);
+            var item = await _commodityService.GetById(id);
 
             return Ok(item);
         }
@@ -43,8 +43,7 @@ namespace netcoreWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var item = await _commodityRepo.Delete(id);
-            await _commodityRepo.SaveChanges();
+            var item = await _commodityService.Delete(id);
 
             return Ok(item);
         }

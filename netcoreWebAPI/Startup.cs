@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using netcoreWebAPI.Data;
+using netcoreWebAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace netcoreWebAPI
             services.AddDbContext<AppDbContext>(option =>
             option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
-            services.AddScoped(typeof(IGenericRepo<>), typeof(SqlGenericRepo<>));
+            services.AddScoped<ICommodityService,CommodityService>();
             services.AddControllers();
         }
 

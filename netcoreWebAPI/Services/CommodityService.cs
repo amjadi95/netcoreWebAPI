@@ -13,51 +13,80 @@ namespace netcoreWebAPI.Services
         {
 
         }
-        public async Task<Commodity> Add(Commodity item)
+        public async Task<ServiceResponse<Commodity>> Add(Commodity item)
         {
-            var obj = await base.Add(item);
-            var success = await SaveChanges();
-            Console.WriteLine(success);
-            return obj;
-
-        }
-
-        public async Task<Commodity> Delete(int id)
-        {
-            var obj = await base.Delete(id);
-            var success = await SaveChanges();
-            Console.WriteLine(success);
-            return obj;
-
-        }
-
-        public async Task<IQueryable<Commodity>> GetAll()
-        {
-            var list = await base.GetAll();
-            return list;
-        }
-
-        public async Task<Commodity> GetById(int id)
-        {
-            var item = await base.GetById(id);
-            return item;
-        }
-        public async Task<string> SaveChanges()
-        {
-            bool success = false;
-            try
+            
+            var response = new ServiceResponse<Commodity>();
+            if(item != null)
             {
-                success = await base.SaveChanges();
-                if (success)
-                    return "saved successed";
-
+                response.Data = await base.Add(item);
+                response.Success = await base.SaveChanges();
+                if(response.Success)
+                {
+                    response.Message = "item saved successfully";                    
+                }
+                else
+                {
+                    response.Message = "save failed";
+                }
+                
             }
-            catch (Exception e)
+            else
             {
-
-                Console.WriteLine(e.Message);
+                response.Success = false;
+                response.Message = "request data cant be null";
             }
-            return "save failed";
+            
+            return response;
+
+        }
+
+        public async Task<ServiceResponse<Commodity>> Delete(int id)
+        {
+            var response = new ServiceResponse<Commodity>();
+            response.Data = await base.Delete(id);
+            if(response.Data != null)
+            {
+                response.Success = await base.SaveChanges();
+                if(response.Success)
+                {
+                    response.Message = "item deleted successfully";
+                }
+                response.Message = "item delete failed";
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "no item found";
+            }
+
+            return response;
+
+        }
+
+        public async Task<ServiceResponse<IQueryable<Commodity>>> GetAll()
+        {
+            var response = new ServiceResponse<IQueryable<Commodity>>();
+
+            response.Data =  await base.GetAll();
+            if(response.Data == null)
+            {
+                response.Success = false;
+                response.Message = "no item found";
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<Commodity>> GetById(int id)
+        {
+            var response = new ServiceResponse<Commodity>();
+            response.Data = await base.GetById(id);
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = "no item found";
+            }
+            return response;
         }
     }
 }

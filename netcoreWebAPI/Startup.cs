@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace netcoreWebAPI
             services.AddDbContext<AppDbContext>(option =>
             option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICommodityService,CommodityService>();
             services.AddControllers();
         }

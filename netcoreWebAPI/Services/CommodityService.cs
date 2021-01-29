@@ -1,4 +1,6 @@
-﻿using netcoreWebAPI.Data;
+﻿using AutoMapper;
+using netcoreWebAPI.Data;
+using netcoreWebAPI.Dtos;
 using netcoreWebAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -9,18 +11,23 @@ namespace netcoreWebAPI.Services
 {
     public class CommodityService : SqlGenericRepo<Commodity>, ICommodityService
     {
-        public CommodityService(AppDbContext context) : base(context)
-        {
+        private readonly IMapper _mapper;
 
+        public CommodityService(AppDbContext context, IMapper mapper) : base(context)
+        {
+            _mapper = mapper;
         }
-        public async Task<ServiceResponse<Commodity>> Add(Commodity item)
+        public async Task<ServiceResponse<CommodityReadDto>> Add(CommodityCreateDto newitem)
         {
             
-            var response = new ServiceResponse<Commodity>();
-            if(item != null)
+            var response = new ServiceResponse<CommodityReadDto>();
+            if(newitem != null)
             {
-                response.Data = await base.Add(item);
+                var commodity = _mapper.Map<Commodity>(newitem);
+                var newCommodity = await base.Add(commodity);
                 response.Success = await base.SaveChanges();
+                response.Data = _mapper.Map<CommodityReadDto>(newCommodity);
+                
                 if(response.Success)
                 {
                     response.Message = "item saved successfully";                    
@@ -41,10 +48,11 @@ namespace netcoreWebAPI.Services
 
         }
 
-        public async Task<ServiceResponse<Commodity>> Delete(int id)
+        public async Task<ServiceResponse<CommodityDeleteDto>> Delete(int id)
         {
-            var response = new ServiceResponse<Commodity>();
-            response.Data = await base.Delete(id);
+            var response = new ServiceResponse<CommodityDeleteDto>();
+            var commodity = await base.Delete(id);
+            response.Data = _mapper.Map<CommodityDeleteDto>(commodity);
             if(response.Data != null)
             {
                 response.Success = await base.SaveChanges();
@@ -65,12 +73,13 @@ namespace netcoreWebAPI.Services
 
         }
 
-        public async Task<ServiceResponse<IQueryable<Commodity>>> GetAll()
+        public async Task<ServiceResponse<IEnumerable<CommodityReadDto>>> GetAll()
         {
-            var response = new ServiceResponse<IQueryable<Commodity>>();
+            var response = new ServiceResponse<IEnumerable<CommodityReadDto>>();
 
-            response.Data =  await base.GetAll();
-            if(response.Data == null)
+            var list =  await base.GetAll();
+            response.Data = _mapper.Map<IEnumerable<CommodityReadDto>>(list);
+            if (response.Data == null)
             {
                 response.Success = false;
                 response.Message = "no item found";
@@ -78,10 +87,11 @@ namespace netcoreWebAPI.Services
             return response;
         }
 
-        public async Task<ServiceResponse<Commodity>> GetById(int id)
+        public async Task<ServiceResponse<CommodityReadDto>> GetById(int id)
         {
-            var response = new ServiceResponse<Commodity>();
-            response.Data = await base.GetById(id);
+            var response = new ServiceResponse<CommodityReadDto>();
+            var commodity = await base.GetById(id);
+            response.Data = _mapper.Map<CommodityReadDto>(commodity);
             if (response.Data == null)
             {
                 response.Success = false;

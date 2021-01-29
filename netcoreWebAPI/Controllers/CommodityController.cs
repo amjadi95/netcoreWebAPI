@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using netcoreWebAPI.Data;
+using netcoreWebAPI.Dtos;
 using netcoreWebAPI.Models;
 using netcoreWebAPI.Services;
 using System;
@@ -20,7 +21,7 @@ namespace netcoreWebAPI.Controllers
         }        
 
         [HttpPost]
-        public async Task<IActionResult> Add( [FromBody]Commodity newCommodity)
+        public async Task<IActionResult> Add( [FromBody]CommodityCreateDto newCommodity)
         {
             var response =  await _commodityService.Add(newCommodity);
             return Ok(response);

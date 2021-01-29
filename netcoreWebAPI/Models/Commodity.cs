@@ -23,6 +23,8 @@ namespace netcoreWebAPI.Models
 
 
 
+
+
         public string Code { get; set; }
         public DateTime DateCreated { get; set; }
 

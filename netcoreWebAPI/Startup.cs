@@ -1,10 +1,14 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using netcoreWebAPI.Data;
+using netcoreWebAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +28,11 @@ namespace netcoreWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(option =>
+            option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+            );
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<ICommodityService,CommodityService>();
             services.AddControllers();
         }
 
@@ -37,7 +46,7 @@ namespace netcoreWebAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

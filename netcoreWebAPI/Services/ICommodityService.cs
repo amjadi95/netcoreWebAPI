@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace netcoreWebAPI.Services
 {
-    public interface ICommodityService : IGenericRepo<Commodity>
+    public interface ICommodityService 
     {
         Task<ServiceResponse<CommodityReadDto>> Add(CommodityCreateDto entity);
         Task<ServiceResponse<IEnumerable<CommodityReadDto>>> GetAll();

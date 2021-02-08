@@ -32,6 +32,7 @@ namespace netcoreWebAPI
             option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped(typeof(IGenericRepo<>), typeof(SqlGenericRepo<>));
             services.AddScoped<ICommodityService,CommodityService>();
             services.AddControllers();
         }
